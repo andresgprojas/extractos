@@ -1,0 +1,83 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            .campo label {
+                display: inline-block;
+                width: 20%;
+            }
+        </style>
+        <script>
+            $(function(){
+                var opciones = {
+                    success: function(a){
+                        if (a=="0"){
+                            window.location.replace("../");
+                        }
+                        else{
+                            $("#respuestaUsuario").dialog({
+                                modal: true
+                            }).html(a);
+                        }
+                        //limpiar inputs
+                        $("#formNew :input:text").each(function(){
+                            $(this).val('');
+                        })
+                    }
+                }
+                $.ajax({
+                    url:'../Controller/usuario.php',
+                    type:'POST',
+                    data:{
+                        'action':'loadPerfiles'
+                    },
+                    success:function(a){
+                        $("#formNew select").html(a)
+                    }
+                })
+                
+                $("#formNew").ajaxForm(opciones);
+                $(".boton").button();
+                
+                
+            })
+        </script>
+        <title>Crear usuario</title>
+    </head>
+    <body>
+        <form id="formNew" method="POST" action="../Controller/usuario.php">
+            <div class="campo">
+                <label for="nuip">Nuip</label>
+                <input type="text" name="nuip" id="nuip" required>
+            </div>
+            <div class="campo">
+                <label for="pNombre">Primer Nombre</label>
+                <input type="text" name="pNombre" id="pNombre" required>
+            </div>
+            <div class="campo">
+                <label for="sNombre">Segundo Nombre</label>
+                <input type="text" name="sNombre" id="sNombre">
+            </div>
+            <div class="campo">
+                <label for="pApellido">Primer Apellido</label>
+                <input type="text" name="pApellido" id="pApellido" required>
+            </div>
+            <div class="campo">
+                <label for="sApellido">Segundo Apellido</label>
+                <input type="text" name="sApellido" id="sApellido">
+            </div>
+            <div class="campo">
+                <label for="perfil">Perfil</label>
+                <select required multiple name="perfiles[]" size="2">
+                </select>
+            </div>
+            <input class="boton" type="submit" value="Crear" name="action">
+        </form>
+        <div id="respuestaUsuario" style="display: none" title="Mensaje!!!"></div>
+    </body>
+</html>

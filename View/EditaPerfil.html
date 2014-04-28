@@ -1,0 +1,82 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Editar Contraseña</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            .campo label {
+                display: inline-block;
+                width: 20%;
+            }
+        </style>
+        <script>
+            $(function(){
+                var opciones = {
+                    success: function(a){
+                        if (a=="0"){
+                            window.location.replace("../");
+                        }
+                        else{
+                            $("#respuestaPassword").dialog({
+                                modal: true
+                            }).html(a);
+                        }
+//                        //limpiar inputs
+                        $("#formModPsw :input:password").each(function(){
+                            $(this).val('');
+                        })
+                    },
+                    beforeSubmit: function(arrs){
+                        var reg = "^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$"
+                        
+                        if (!$("#oldPassword").val() || !$("#newPassword").val() || !$("#newPassword2").val()){//no este vacio
+                            alert("Ningun campo puede estar vacio")
+                            return false;
+
+                        }
+                        else if(!$("#newPassword").val().match(reg)){
+                            alert('La nueva clave debe contener mayúsculas, minúsculas y números')
+                            return false;
+                        }
+                        else if($("#newPassword").val() != $("#newPassword2").val()){
+                            alert("Las contraseña nueva debe concordar con la confirmación")
+                            return false;
+                            
+                        }
+                        return true;
+                        
+                    }
+                }
+//                
+//                
+                $("#formModPsw").ajaxForm(opciones);
+                $(".boton").button();
+                
+                
+            })
+        </script>
+        
+    </head>
+    <body>
+        <form id="formModPsw" method="POST" action="../Controller/usuario.php">
+            <div class="campo">
+                <label for="oldPassword">Clave Anterior</label>
+                <input type="password" name="oldPassword" id="oldPassword" required placeholder="Digita tu clave actual">
+            </div>
+            <div class="campo">
+                <label for="newPassword">Nueva Clave</label>
+                <input type="password" name="newPassword" id="newPassword" required placeholder="Digita tu nueva clave">
+            </div>
+            <div class="campo">
+                <label for="newPassword2">Confirmacion Clave</label>
+                <input type="password" name="newPassword2" id="newPassword2" required placeholder="Vuelve a digitarla">
+            </div>
+            <input class="boton" type="submit" value="Modificar Clave" name="action">
+        </form>
+        <div id="respuestaPassword" style="display: none" title="Mensaje!!!"></div>
+    </body>
+</html>

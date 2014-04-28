@@ -1,0 +1,50 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cargar Archivo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            .campo label {
+                display: inline-block;
+                width: 20%;
+            }
+        </style>
+        <script>
+            $(function(){
+                var opciones = {
+                    success: function(a){
+                        if (a=="0"){
+                            window.location.replace("../");
+                        }
+                        else{
+                            $("#respuestaCSV").dialog({
+                                modal: true
+                            }).html(a);
+                        }
+//                        //limpiar inputs
+                        $("#formNew :input:file").each(function(){
+                            $(this).val('');
+                        })
+                    }
+                }
+//                
+//                
+                $("#formLoad").ajaxForm(opciones);
+//                $(".boton").button();
+                
+                
+            })
+        </script>
+    </head>
+    <body>
+        <form id="formLoad" method="POST" action="../Controller/CSV.php" enctype="multipart/form-data">
+            <input type="file" name="myFile" required>
+            <input type="submit" value="Subir al Servidor" name="action">
+        </form>
+        <div id="respuestaCSV" style="display: none" title="Mensaje!!!"></div>
+    </body>
+</html>

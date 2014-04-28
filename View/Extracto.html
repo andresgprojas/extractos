@@ -1,0 +1,59 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Extracto</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            .campo label {
+                display: inline-block;
+                width: 20%;
+            }
+        </style>
+        <script>
+            $(function(){
+                var opciones = {
+                    success: function(a){
+                        if (a=="0"){
+                            window.location.replace("../");
+                        }
+                        else{
+                            $("#respuestaExtracto").html(a);
+                        }
+//                        //limpiar inputs
+//                        $("#formNew :input:text").each(function(){
+//                            $(this).val('');
+//                        })
+                    }
+                }
+//                
+//                
+                $("#formGenerate").ajaxForm(opciones);
+                $(".boton").button();
+                $("#date").datepicker({
+                    maxDate: "0D",
+                    changeMonth: true,
+                    changeYear: true,
+                    dateFormat: 'yy-mm-dd'
+
+                });
+                
+                
+            })
+        </script>
+    </head>
+    <body>
+        <form id="formGenerate" method="POST" action="../Controller/usuario.php">
+            <div class="campo">
+                <label for="nuip">Seleccione el mes</label>
+                <input type="text" size="30" name="date" id="date" required placeholder="Seleccione cualquier día del mes">
+            </div>
+            
+            <input class="boton" type="submit" value="Generar" name="action">
+        </form>
+        <div id="respuestaExtracto"></div>
+    </body>
+</html>

@@ -1,0 +1,89 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Inicio</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
+        <link rel="stylesheet" href="css/personal-theme/jquery-ui-1.9.2.custom.min.css" />
+        <script src="http://malsup.github.com/jquery.form.js"></script> 
+        <script>
+            $(function(){
+                //traer los nombres del usuario
+                $.ajax({
+                    type:   'POST',
+                    url:    '../Controller/usuario.php',
+                    data:{
+                        'action': 'loadName'
+                    },
+                    success: function(a){
+                        if(a == '0'){
+                            window.location.replace("../");
+                        }
+                        r=a.split("::")
+
+                        if (r[0]!='SU'){
+                            $("#usuario").css({"display":"none"})
+                            $("#carga").css({"display":"none"})
+                        }
+                        $("#name").html(r[1])
+                    }
+                })
+                
+                /**
+                 * Cerrar Sesión
+                 */
+                $(".endSesion").click(function(){
+                    $.ajax({
+                        type:   'POST',
+                        url:    '../Controller/usuario.php',
+                        data:{
+                            'action': 'endSesion'
+                        },
+                        success: function(a){
+                            if (a=="1"){
+                                window.location.replace("../");
+                            }
+                        }
+                    })
+                })
+                
+                /*+
+                 * Crear los tabs
+                 */
+                $( "#pestanias" ).tabs({
+                    beforeLoad: function( event, ui ) {
+                        ui.jqXHR.error(function() {
+                            ui.panel.html(
+                            "No se puede cargar esta pestaña. Trataremos de corregir este error" );
+                        });
+                    }
+                });
+            })
+        </script>
+    </head>
+    <body style="margin: auto 15%;background: none repeat scroll 0 0 #EBEBEB;">
+        <div class="head">
+            <h1>Hola <b><span id="name"> </span></b> bienvenido!!!
+            <a class="endSesion" href="#">Salir</a>
+            </h1>
+        </div>
+        <div id="pestanias">
+            <ul>
+                <li id="extracto"><a href="Extracto.html">Extractos</a></li>
+                <li id="contra"><a href="EditaPerfil.html">Editar Contraseña</a></li>
+                <!--<li><a href="#tab-2">Usuarios</a></li>-->
+                <li id="carga"><a href="CargarCSV.html">Cargar CSV</a></li>
+                <li id="usuario"><a href="Usuario.html">Crear Usuario</a></li>
+            </ul>
+<!--            <div id="tab-2">
+                <p>Lsitar los usuarios para luego editarlos</p>
+            </div>-->
+        </div>
+        <!--<h1>Verificar por cada pestaña el acceso de los perfiles.</h1>-->
+    </body>
+</html>
