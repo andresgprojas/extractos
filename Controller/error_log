@@ -1,4 +1,0 @@
-[28-Apr-2014 01:20:57 America/Bogota] PHP Warning:  Invalid argument supplied for foreach() in /home/girograp/public_html/clientes/lorenca/extractos/Controller/usuario.php on line 240
-[28-Apr-2014 01:21:40 America/Bogota] PHP Warning:  Invalid argument supplied for foreach() in /home/girograp/public_html/clientes/lorenca/extractos/Controller/usuario.php on line 240
-[28-Apr-2014 01:23:58 America/Bogota] PHP Warning:  Invalid argument supplied for foreach() in /home/girograp/public_html/clientes/lorenca/extractos/Controller/usuario.php on line 240
-[28-Apr-2014 01:30:50 America/Bogota] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/girograp/public_html/clientes/lorenca/extractos/Controller/usuario.php on line 17
