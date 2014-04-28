@@ -16,7 +16,7 @@ and open the template in the editor.
                 //traer los nombres del usuario
                 $.ajax({
                     type:   'POST',
-                    url:    '../Controller/usuario.php',
+                    url:    '../Controller/usuario',
                     data:{
                         'action': 'loadName'
                     },
@@ -40,7 +40,7 @@ and open the template in the editor.
                 $(".endSesion").click(function(){
                     $.ajax({
                         type:   'POST',
-                        url:    '../Controller/usuario.php',
+                        url:    '../Controller/usuario',
                         data:{
                             'action': 'endSesion'
                         },
@@ -74,11 +74,11 @@ and open the template in the editor.
         </div>
         <div id="pestanias">
             <ul>
-                <li id="extracto"><a href="Extracto.html">Extractos</a></li>
-                <li id="contra"><a href="EditaPerfil.html">Editar Contraseña</a></li>
+                <li id="extracto"><a href="Extracto">Extractos</a></li>
+                <li id="contra"><a href="EditaPerfil">Editar Contraseña</a></li>
                 <!--<li><a href="#tab-2">Usuarios</a></li>-->
-                <li id="carga"><a href="CargarCSV.html">Cargar CSV</a></li>
-                <li id="usuario"><a href="Usuario.html">Crear Usuario</a></li>
+                <li id="carga"><a href="CargarCSV">Cargar CSV</a></li>
+                <li id="usuario"><a href="Usuario">Crear Usuario</a></li>
             </ul>
 <!--            <div id="tab-2">
                 <p>Lsitar los usuarios para luego editarlos</p>

@@ -18,7 +18,7 @@
                 options = {
                     success: function(a){;
                         if (a == 'TRUE'){
-                            window.location.replace("View/home.html");
+                            window.location.replace("View/home");
                         }
                         else{
                             alert(a);
@@ -31,7 +31,7 @@
         <title>Login</title>
     </head>
     <body>
-        <form id="login" method="POST" action="Controller/usuario.php" style="text-align: center">
+        <form id="login" method="POST" action="Controller/usuario" style="text-align: center">
         
             <div class="campo">
                 <label for="nuip">Usuario</label>
