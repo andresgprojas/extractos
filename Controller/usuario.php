@@ -167,56 +167,43 @@ switch ($action) {
         if($datos === FALSE)
             die("No se han cargado datos para la fecha seleccionada");
         
-        $html = "<table border = '1'>
-            <tr>
-                <th>Extracto mes</th><th>Cédula</th><th>Nombre</th><th>Dirección</th><th>Ciudad</th><th>País</th><th>Saldo Anterior</th>
-            </tr>
-            <tr>
-                <td>{$fechaFin}</td>
-                <td>{$rta[0]->getNuip()}</td>
-                <td>{$rta[0]->getPrimerNom()} {$rta[0]->getSegundoNom()} {$rta[0]->getPrimerApell()} {$rta[0]->getSegundoNom()}</td>
-                <td>{$rta[0]->getDireccion()}</td>
-                <td>{$rta[0]->getCiudad()}</td>
-                <td>{$rta[0]->getPais()}</td>
-                <td>--</td>
-            </tr>
-            </table>
-            ";
-        $html .= "<br><br><table border='1' style='width:100%'>";
-        $html .= "<tr>
-                    <th>Fecha Documento</th>
-                    <th>Documento</th>
-                    <th>Número</th>
-                    <th>Transacción</th>
-                    <th>Detalle</th>
-                    <th>Valor Débito</th>
-                    <th>Valor Crédito</th>
-                    <th>Saldo</th>
-                </tr>";
-        foreach ($datos as $fila) {
+        
+        $pdf = new PDF_MC_Table('L');
+        $pdf->Open();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->SetWidths(array(30, 25, 70, 62, 30, 30, 30));
+        $pdf->Cell(0,10,'DATOS CLIENTE',1,1,'C');
+        $pdf->SetFont('Arial', 'B', 12);
+//        $pdf->SetDrawColor(0,0,100);//borde
+//        $pdf->SetTextColor(0,0,100);//color letra
+//        $pdf->SetFillColor(74,88,210);//fondo
+        $pdf->Row(array('FECHA EXT', 'CÉDULA', 'NOMBRE', 'DIRECCIÓN', 'CIUDAD', 'PAIS', 'SALDO ANT'), TRUE);
+        
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Row(array($fechaFin, $rta[0]->getNuip(), "{$rta[0]->getPrimerNom()} {$rta[0]->getSegundoNom()} {$rta[0]->getPrimerApell()} {$rta[0]->getSegundoNom()}", $rta[0]->getDireccion(), $rta[0]->getCiudad(), $rta[0]->getPais(), '--'), TRUE);
+        
+        $pdf->Ln();
+        $pdf->Ln();
+        
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->Cell(0,10,'MOVIMIENTOS DEL MES',1,1,'C');
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->SetWidths(array(25, 30, 25, 35, 50, 40, 40, 32));
+        
+        $pdf->Row(array('FECHA', 'DOCUMENTO', 'NÚMERO', 'TRANSACCIÓN', 'DETALLE', 'VALOR DÉBITO', 'VALOR CRÉDITO', 'SALDO'),TRUE);
 
+        $pdf->SetFont('Arial', '', 12);
+        foreach ($datos as $fila) {
             $debito = number_format((float)substr($fila['Debito'], 0, -2).".00", 2);
             $credit = number_format((float)substr($fila['Credito'], 0, -2).".00", 2);
             $saldo  = number_format((float)substr($fila['Saldo'], 0, -3).".00", 2);
             $sym    = substr($fila['Saldo'], -1);
             
-            $html .= 
-                "<tr>
-                    <td>{$fila['FechaDocumento']}</td>
-                    <td>{$fila['Documento']}</td>
-                    <td>{$fila['Numero']}</td>
-                    <td>{$fila['Transaccion']}</td>
-                    <td>{$fila['Detalle']}</td>
-                    <td>{$debito}</td>
-                    <td>{$credit}</td>
-                    <td>{$saldo}{$sym}</td>
-                </tr>";
-            
+            $pdf->Row(array($fila['FechaDocumento'],$fila['Documento'],$fila['Numero'],$fila['Transaccion'],$fila['Detalle'],$debito,$credit,$saldo.$sym));
         }
-        $html .= "<table>";
-        
-        printf('%s', utf8_encode($html));
-        
+        $pdf->Output();
+
         break;
         
     default://Verificar datos de inicio de sesión

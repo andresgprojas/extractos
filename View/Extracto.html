@@ -15,23 +15,6 @@ and open the template in the editor.
         </style>
         <script>
             $(function(){
-                var opciones = {
-                    success: function(a){
-                        if (a=="0"){
-                            window.location.replace("../");
-                        }
-                        else{
-                            $("#respuestaExtracto").html(a);
-                        }
-//                        //limpiar inputs
-//                        $("#formNew :input:text").each(function(){
-//                            $(this).val('');
-//                        })
-                    }
-                }
-//                
-//                
-                $("#formGenerate").ajaxForm(opciones);
                 $(".boton").button();
                 $("#date").datepicker({
                     maxDate: "0D",
@@ -46,7 +29,7 @@ and open the template in the editor.
         </script>
     </head>
     <body>
-        <form id="formGenerate" method="POST" action="../Controller/usuario">
+        <form target="_blank" method="POST" action="../Controller/usuario">
             <div class="campo">
                 <label for="nuip">Seleccione el mes</label>
                 <input type="text" size="30" name="date" id="date" required placeholder="Seleccione cualquier día del mes">
