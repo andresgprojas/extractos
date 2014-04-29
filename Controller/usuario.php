@@ -90,63 +90,6 @@ switch ($action) {
         $Con->cerrar();
         break;
     
-    case 'Crear'://Crear Usuario
-        
-        $Con = new Conn();
-        $Con->conectar();
-        $sesion = $Con->getSesion();
-        
-        if ($sesion === FALSE)
-            die('0');
-        else if(!in_array("1", $_SESSION['Roles']))
-            die('0');
-        
-        if(!isset($perfiles))
-            die("Debe seleccionar un perfil");
-        
-        if ($nuip && $pNombre && $pApellido && count($perfiles)>0){
-            mysqli_autocommit($Con->getLink(), FALSE);
-
-            $ok = TRUE;
-
-            $Usuario = new Usuario();
-            $Usuario->setNuip($nuip);
-            $Usuario->setPrimerApell(utf8_decode($pApellido));
-            $Usuario->setPrimerNom(utf8_decode($pNombre));
-            $Usuario->setSegundoApell(utf8_decode($sApellido));
-            $Usuario->setSegundoNom(utf8_decode($sNombre));
-            $Usuario->setUsuario($Con) ? NULL:$ok=FALSE;
-
-            $Login = new Login();
-            $Login->setPassword(md5($nuip));
-            $Login->setUsuarioNuip($nuip);
-            $Login->setLogin($Con) ? NULL:$ok=FALSE;
-            
-            foreach ($perfiles as $perfil) {
-                $LoginPerfil = new LoginHasPerfil();
-                $LoginPerfil->setLoginUsuarioNuip($nuip);
-                $LoginPerfil->setPerfilId($perfil);
-                $LoginPerfil->setLoginPerfil($Con) ? NULL:$ok=FALSE;
-                if($ok === FALSE){break;}
-                
-            }
-            if($ok===TRUE){
-                mysqli_commit($Con->getLink());
-                printf(utf8_encode("Usuario creado Satisfactoriamente, recuerde que el password de acceso es el número de identificación"));
-            }else{
-                mysqli_rollback($Con->getLink());
-                printf(utf8_encode("Hubo un error en la creación del usuario"));
-            }
-
-        }else{
-            printf("Recuerde que hay campos obligatorios");
-        }
-        
-        $Con->cerrar();
-        
-        
-        break;
-        
     case 'Generar'://Generar Extracto
         $Con = new Conn();
         $Con->conectar();
@@ -167,56 +110,43 @@ switch ($action) {
         if($datos === FALSE)
             die("No se han cargado datos para la fecha seleccionada");
         
-        $html = "<table border = '1'>
-            <tr>
-                <th>Extracto mes</th><th>Cédula</th><th>Nombre</th><th>Dirección</th><th>Ciudad</th><th>País</th><th>Saldo Anterior</th>
-            </tr>
-            <tr>
-                <td>{$fechaFin}</td>
-                <td>{$rta[0]->getNuip()}</td>
-                <td>{$rta[0]->getPrimerNom()} {$rta[0]->getSegundoNom()} {$rta[0]->getPrimerApell()} {$rta[0]->getSegundoNom()}</td>
-                <td>{$rta[0]->getDireccion()}</td>
-                <td>{$rta[0]->getCiudad()}</td>
-                <td>{$rta[0]->getPais()}</td>
-                <td>--</td>
-            </tr>
-            </table>
-            ";
-        $html .= "<br><br><table border='1' style='width:100%'>";
-        $html .= "<tr>
-                    <th>Fecha Documento</th>
-                    <th>Documento</th>
-                    <th>Número</th>
-                    <th>Transacción</th>
-                    <th>Detalle</th>
-                    <th>Valor Débito</th>
-                    <th>Valor Crédito</th>
-                    <th>Saldo</th>
-                </tr>";
-        foreach ($datos as $fila) {
+        
+        $pdf = new PDF_MC_Table('L');
+        $pdf->Open();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->SetWidths(array(30, 25, 70, 62, 30, 30, 30));
+        $pdf->Cell(0,10,'DATOS CLIENTE',1,1,'C');
+        $pdf->SetFont('Arial', 'B', 12);
+//        $pdf->SetDrawColor(0,0,100);//borde
+//        $pdf->SetTextColor(0,0,100);//color letra
+//        $pdf->SetFillColor(74,88,210);//fondo
+        $pdf->Row(array('FECHA EXT', 'CÉDULA', 'NOMBRE', 'DIRECCIÓN', 'CIUDAD', 'PAIS', 'SALDO ANT'), TRUE);
+        
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Row(array($fechaFin, $rta[0]->getNuip(), "{$rta[0]->getPrimerNom()} {$rta[0]->getSegundoNom()} {$rta[0]->getPrimerApell()} {$rta[0]->getSegundoNom()}", $rta[0]->getDireccion(), $rta[0]->getCiudad(), $rta[0]->getPais(), '--'), TRUE);
+        
+        $pdf->Ln();
+        $pdf->Ln();
+        
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->Cell(0,10,'MOVIMIENTOS DEL MES',1,1,'C');
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->SetWidths(array(25, 30, 25, 35, 50, 40, 40, 32));
+        
+        $pdf->Row(array('FECHA', 'DOCUMENTO', 'NÚMERO', 'TRANSACCIÓN', 'DETALLE', 'VALOR DÉBITO', 'VALOR CRÉDITO', 'SALDO'),TRUE);
 
+        $pdf->SetFont('Arial', '', 12);
+        foreach ($datos as $fila) {
             $debito = number_format((float)substr($fila['Debito'], 0, -2).".00", 2);
             $credit = number_format((float)substr($fila['Credito'], 0, -2).".00", 2);
             $saldo  = number_format((float)substr($fila['Saldo'], 0, -3).".00", 2);
             $sym    = substr($fila['Saldo'], -1);
             
-            $html .= 
-                "<tr>
-                    <td>{$fila['FechaDocumento']}</td>
-                    <td>{$fila['Documento']}</td>
-                    <td>{$fila['Numero']}</td>
-                    <td>{$fila['Transaccion']}</td>
-                    <td>{$fila['Detalle']}</td>
-                    <td>{$debito}</td>
-                    <td>{$credit}</td>
-                    <td>{$saldo}{$sym}</td>
-                </tr>";
-            
+            $pdf->Row(array($fila['FechaDocumento'],$fila['Documento'],$fila['Numero'],$fila['Transaccion'],$fila['Detalle'],$debito,$credit,$saldo.$sym));
         }
-        $html .= "<table>";
-        
-        printf('%s', utf8_encode($html));
-        
+        $pdf->Output();
+
         break;
         
     default://Verificar datos de inicio de sesión

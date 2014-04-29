@@ -13,9 +13,9 @@
 class Conn {
 
     const _HOST = "localhost";
-    const _USUARIO = "girograp_andres";
-    const _PASSWORD = "Rubr05*2014";
-    const _DATABASE = "girograp_rubros";
+    const _USUARIO = "root";
+    const _PASSWORD = "root";
+    const _DATABASE = "rubros";
     private $link;
     
     
@@ -23,7 +23,6 @@ class Conn {
     public function conectar(){
         $link = @mysqli_connect($this::_HOST, $this::_USUARIO, $this::_PASSWORD, $this::_DATABASE) or die("Error al conectarse con el servidor");
         $this->setLink($link);
-//        $this->setLink(@mysqli_select_db($this::_DATABASE) or die('Error al conectarse con la base de datos'));
     }
     
     public function cerrar(){
