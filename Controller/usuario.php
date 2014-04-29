@@ -90,6 +90,63 @@ switch ($action) {
         $Con->cerrar();
         break;
     
+    case 'Crear'://Crear Usuario
+        
+        $Con = new Conn();
+        $Con->conectar();
+        $sesion = $Con->getSesion();
+        
+        if ($sesion === FALSE)
+            die('0');
+        else if(!in_array("1", $_SESSION['Roles']))
+            die('0');
+        
+        if(!isset($perfiles))
+            die("Debe seleccionar un perfil");
+        
+        if ($nuip && $pNombre && $pApellido && count($perfiles)>0){
+            mysqli_autocommit($Con->getLink(), FALSE);
+
+            $ok = TRUE;
+
+            $Usuario = new Usuario();
+            $Usuario->setNuip($nuip);
+            $Usuario->setPrimerApell(utf8_decode($pApellido));
+            $Usuario->setPrimerNom(utf8_decode($pNombre));
+            $Usuario->setSegundoApell(utf8_decode($sApellido));
+            $Usuario->setSegundoNom(utf8_decode($sNombre));
+            $Usuario->setUsuario($Con) ? NULL:$ok=FALSE;
+
+            $Login = new Login();
+            $Login->setPassword(md5($nuip));
+            $Login->setUsuarioNuip($nuip);
+            $Login->setLogin($Con) ? NULL:$ok=FALSE;
+            
+            foreach ($perfiles as $perfil) {
+                $LoginPerfil = new LoginHasPerfil();
+                $LoginPerfil->setLoginUsuarioNuip($nuip);
+                $LoginPerfil->setPerfilId($perfil);
+                $LoginPerfil->setLoginPerfil($Con) ? NULL:$ok=FALSE;
+                if($ok === FALSE){break;}
+                
+            }
+            if($ok===TRUE){
+                mysqli_commit($Con->getLink());
+                printf(utf8_encode("Usuario creado Satisfactoriamente, recuerde que el password de acceso es el número de identificación"));
+            }else{
+                mysqli_rollback($Con->getLink());
+                printf(utf8_encode("Hubo un error en la creación del usuario"));
+            }
+
+        }else{
+            printf("Recuerde que hay campos obligatorios");
+        }
+        
+        $Con->cerrar();
+        
+        
+        break;
+        
     case 'Generar'://Generar Extracto
         $Con = new Conn();
         $Con->conectar();
