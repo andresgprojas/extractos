@@ -6,7 +6,7 @@
     require_once 'Model/TipoIdentificacion.php';
     require_once 'Model/Rubros.php';
     require_once 'Model/Documento.php';
-    require_once 'Conn.php';
+    require_once 'Config/Conn.php';
     require_once 'Model/libs/fpdf-17/fpdf.php';
     require_once 'Model/libs/fpdf-17/PDF_MC_Table.php';
 ?>

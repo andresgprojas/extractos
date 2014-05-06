@@ -12,16 +12,23 @@
  */
 class Conn {
 
-    const _HOST = "localhost";
-    const _USUARIO = "root";
-    const _PASSWORD = "root";
-    const _DATABASE = "rubros";
+    private $_HOST;
+    private $_USUARIO;
+    private $_PASSWORD;
+    private $_DATABASE;
     private $link;
     
-    
-    
+    public function __construct() {
+        $Credenciales = simplexml_load_file('config.xml');
+        $c = (array) $Credenciales->credencial;
+        $this->_HOST    = $c['host'];
+        $this->_USUARIO = $c['usuaro'];
+        $this->_PASSWORD= $c['password'];
+        $this->_DATABASE= $c['database'];
+    }
+
     public function conectar(){
-        $link = @mysqli_connect($this::_HOST, $this::_USUARIO, $this::_PASSWORD, $this::_DATABASE) or die("Error al conectarse con el servidor");
+        $link = @mysqli_connect($this->_HOST, $this->_USUARIO, $this->_PASSWORD, $this->_DATABASE) or die(mysql_error());
         $this->setLink($link);
     }
     
