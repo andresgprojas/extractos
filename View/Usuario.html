@@ -31,7 +31,7 @@ and open the template in the editor.
                     }
                 }
                 $.ajax({
-                    url:'../Controller/usuario',
+                    url:'../Controller/usuario.php',
                     type:'POST',
                     data:{
                         'action':'loadPerfiles'
@@ -50,7 +50,7 @@ and open the template in the editor.
         <title>Crear usuario</title>
     </head>
     <body>
-        <form id="formNew" method="POST" action="../Controller/usuario">
+        <form id="formNew" method="POST" action="../Controller/usuario.php">
             <div class="campo">
                 <label for="nuip">Nuip</label>
                 <input type="text" name="nuip" id="nuip" required>
