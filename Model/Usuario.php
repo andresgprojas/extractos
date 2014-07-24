@@ -124,9 +124,6 @@ class Usuario {
      * @return boolean|array
      */
     public function getByFilter($conn, $filtro = array()) {
-//        $conn = new Conn();
-//        $conn->conectar();
-
 
         $filter = "";
         if (count($filtro) > 0) {
@@ -160,6 +157,36 @@ class Usuario {
         }
 
 //        $conn->cerrar();
+        return $arrayPadre;
+    }
+    
+    public function getComplete($conn, $term) {
+        $Login = new Login();
+        
+        $str = "SELECT ".$this::Tabla.".* FROM " . $this::Tabla . " "
+                . "INNER JOIN ".$Login::Tabla." ON Usuario_Nuip = Nuip "
+                . "WHERE Activo = 1 AND (PrimerNom LIKE '%{$term}%' OR SegundoNom LIKE '%{$term}%' OR PrimerApell LIKE '%{$term}%' OR SegundoApell LIKE '%{$term}%')";
+        
+        $qry = mysqli_query($conn->getLink(), $str) or die(mysql_error());
+
+        if (mysqli_num_rows($qry) == 0)
+            return FALSE;
+
+        $arrayPadre = array();
+        while ($row = mysqli_fetch_assoc($qry)) {
+            $myClass = new Usuario();
+            $myClass->setCiudad($row['Ciudad']);
+            $myClass->setNuip($row['Nuip']);
+            $myClass->setPais($row['Pais']);
+            $myClass->setPrimerApell($row['PrimerApell']);
+            $myClass->setDireccion($row['Direccion']);
+            $myClass->setPrimerNom($row['PrimerNom']);
+            $myClass->setSegundoApell($row['SegundoApell']);
+            $myClass->setSegundoNom($row['SegundoNom']);
+
+            array_push($arrayPadre, $myClass);
+        }
+
         return $arrayPadre;
     }
 

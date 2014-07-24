@@ -206,6 +206,30 @@ switch ($action) {
 
         break;
         
+    case 'Restaurar'://Editar Contraseña
+        $Con = new Conn();
+        $Con->conectar();
+        $sesion = $Con->getSesion();
+        
+        if ($sesion === FALSE)
+            die('0');//salir
+        
+        $nuip = trim($cc);
+        
+        $Login = new Login();
+        $Login->setPassword(md5($nuip));
+        $rta = $Login->updateByFilter($Con, array('Usuario_Nuip'=>$nuip));
+
+        
+        if ($rta == TRUE){
+            printf(utf8_encode('Modificación realizada con éxito'));
+        }
+        else{
+            printf(utf8_encode('No se ha realizado la restauración. Puede que se haya hecho una previamente'));
+        }
+
+        break;
+        
     default://Verificar datos de inicio de sesión
         $Con = new Conn();
         $Con->conectar();
