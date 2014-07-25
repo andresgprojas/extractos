@@ -115,7 +115,7 @@ class Rubros {
                 "'{$this->getSaldo()}', " .
                 "'{$this->getUsuarioNuip()}', " .
                 "'{$this->getTransaccionId()}')";
-        $qry = mysqli_query($conn->getLink(), $str) or die(mysqli_error($conn->getLink()));
+        $qry = mysqli_query($conn->getLink(), $str);
         
         return $qry;
     }

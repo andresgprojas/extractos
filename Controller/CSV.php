@@ -118,7 +118,6 @@ switch ($action) {
                     $Rubros->setUsuarioNuip($CC);
 
                     if (!$Rubros->setRubro($Con)){
-//                        echo "c";
                         $ok=FALSE;
                         break;
                     }
@@ -133,7 +132,7 @@ switch ($action) {
                 printf(utf8_encode("Archivo Cargado Satisfactoriamente"));
             }else{
                 mysqli_rollback($Con->getLink());
-                printf(utf8_encode("Hubo un error Al cargar el archivo"));
+                printf(utf8_encode("Hubo un error al cargar el archivo. Posiblemente ya fue cargado"));
             }
             
             fclose ( $fp );
