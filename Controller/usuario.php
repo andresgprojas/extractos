@@ -168,32 +168,40 @@ switch ($action) {
             die("No se han cargado datos para la fecha seleccionada");
         
         
-        $pdf = new PDF_MC_Table('L');
+        $pdf = new PDF_MC_Table();
         $pdf->Open();
         $pdf->AddPage();
+        $pdf->SetMargins(20, 20, 20, 20);
         $pdf->SetFont('Arial', 'B', 14);
-        $pdf->SetWidths(array(30, 25, 70, 62, 30, 30, 30));
+        $pdf->SetTextColor(163, 18, 1);//Texto Rojo Lorenca
+        $pdf->Cell(0, 10);
+        $pdf->Ln();
+        $pdf->Cell(0,10,'EXTRACTOS',0,0,'R');
+        $pdf->Ln();
+        $pdf->Ln();
+        $pdf->Ln();
+        $pdf->Image('../View/css/logo.png', 20, 10, 80, 30, 'PNG');
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->SetWidths(array(16, 16, 46, 36, 20, 16, 20));
+        $pdf->SetTextColor(0, 0, 0);//Texto Negro
         $pdf->Cell(0,10,'DATOS CLIENTE',1,1,'C');
-        $pdf->SetFont('Arial', 'B', 12);
-//        $pdf->SetDrawColor(0,0,100);//borde
-//        $pdf->SetTextColor(0,0,100);//color letra
-//        $pdf->SetFillColor(74,88,210);//fondo
+        $pdf->SetFont('Arial', 'B', 7);
         $pdf->Row(array('FECHA EXT', 'CÉDULA', 'NOMBRE', 'DIRECCIÓN', 'CIUDAD', 'PAIS', 'SALDO ANT'), TRUE);
         
-        $pdf->SetFont('Arial', '', 12);
+        $pdf->SetFont('Arial', '', 7);
         $pdf->Row(array($fechaFin, $rta[0]->getNuip(), "{$rta[0]->getPrimerNom()} {$rta[0]->getSegundoNom()} {$rta[0]->getPrimerApell()} {$rta[0]->getSegundoNom()}", $rta[0]->getDireccion(), $rta[0]->getCiudad(), $rta[0]->getPais(), '--'), TRUE);
         
         $pdf->Ln();
         $pdf->Ln();
         
-        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->SetFont('Arial', 'B', 9);
         $pdf->Cell(0,10,'MOVIMIENTOS DEL MES',1,1,'C');
-        $pdf->SetFont('Arial', 'B', 12);
-        $pdf->SetWidths(array(25, 30, 25, 35, 50, 40, 40, 32));
+        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->SetWidths(array(15, 20, 14, 21, 36, 21, 23, 20));
         
         $pdf->Row(array('FECHA', 'DOCUMENTO', 'NÚMERO', 'TRANSACCIÓN', 'DETALLE', 'VALOR DÉBITO', 'VALOR CRÉDITO', 'SALDO'),TRUE);
 
-        $pdf->SetFont('Arial', '', 12);
+        $pdf->SetFont('Arial', '', 7);
         foreach ($datos as $fila) {
             $debito = number_format((float)substr($fila['Debito'], 0, -2).".00", 2);
             $credit = number_format((float)substr($fila['Credito'], 0, -2).".00", 2);
