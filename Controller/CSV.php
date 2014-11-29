@@ -36,9 +36,9 @@ switch ($action) {
                     $direccion  = trim($fila[5]);//direccion
                     $ciudad     = trim($fila[6]);//[7];//ciudad
                     $pais       = trim($fila[7]);//[8];//pais
-                    $CC         = (int)$fila[8];//[10];//cedula
+                    $CC         = ltrim($fila[8], '0');//[10];//cedula
                     $saldoAnt   = trim($fila[9]);//[11];//saldo Anterior
-                    
+
                     $Usuario = new Usuario();
                     $rta = $Usuario->getByFilter($Con, array('Nuip'=>$CC));
                     
